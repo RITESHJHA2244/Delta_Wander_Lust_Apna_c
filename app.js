@@ -3,6 +3,7 @@ const app = express();
 
 const mongoose = require("mongoose");
 const Listing = require("./models/listing.js");
+const path=require("path");
 
 const wander_lust = "mongodb://127.0.0.1:27017/test";
 
@@ -17,26 +18,35 @@ main()
 async function main() {
     await mongoose.connect(wander_lust);
 }
-
+app.set("view engine","ejs");
+app.set("views",path.join(__dirname,"views"));
 app.get("/", (req, res) => {
     res.send("Hi, I am a root");
 });
 
-app.get("/testListing", async (req, res) => {
-    let sampleListing = new Listing({
-        title: "My new villa",
-        description: "by the beach",
-        price: 1200,
-        location: "jaipur, delhi",
-        country: "india",
-    });
 
-    await sampleListing.save();
+app.get("/listings", async (req, res) => {
 
-    console.log("sample was saved");
+    const allListings = await Listing.find({});
 
-    res.send("successful testing");
+    res.render("listings/index.ejs", { allListings });
+
 });
+// app.get("/testListing", async (req, res) => {
+//     let sampleListing = new Listing({
+//         title: "My new villa",
+//         description: "by the beach",
+//         price: 1200,
+//         location: "jaipur, delhi",
+//         country: "india",
+//     });
+
+//     await sampleListing.save();
+
+//     console.log("sample was saved");
+
+//     res.send("successful testing");
+// });
 
 app.listen(8080, () => {
     console.log("server is listening to port 8080");

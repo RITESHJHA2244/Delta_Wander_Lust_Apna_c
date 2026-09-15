@@ -32,6 +32,11 @@ app.get("/listings", async (req, res) => {
     res.render("listings/index.ejs", { allListings });
 
 });
+
+// show rout 
+app.get("/listings/:id",(req,res)=>{
+    let{id}=req.params;
+})
 // app.get("/testListing", async (req, res) => {
 //     let sampleListing = new Listing({
 //         title: "My new villa",

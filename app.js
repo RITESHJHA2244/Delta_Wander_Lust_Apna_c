@@ -33,10 +33,22 @@ app.get("/listings", async (req, res) => {
 
 });
 
+// new route
+
+app.get("/listings/new",(req,rse)=>{
+    res.render("listings/new.ejs")
+});
+
 // show rout 
-app.get("/listings/:id",(req,res)=>{
+app.get("/listings/:id",async (req,res)=>{
     let{id}=req.params;
-})
+    const listing= await Listing.findById(id);
+    res.render ("listings/show.ejs",{listing});
+
+});
+
+
+
 // app.get("/testListing", async (req, res) => {
 //     let sampleListing = new Listing({
 //         title: "My new villa",

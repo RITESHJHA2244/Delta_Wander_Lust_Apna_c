@@ -4,10 +4,10 @@ const app = express();
 const mongoose = require("mongoose");
 const Listing = require("./models/listing.js");
 const path = require("path");
+const methodOverride = require("method-override");
 
 const wander_lust = "mongodb://127.0.0.1:27017/test";
 
-// MongoDB connection
 main()
     .then(() => {
         console.log("connected to db");
@@ -20,33 +20,32 @@ async function main() {
     await mongoose.connect(wander_lust);
 }
 
-// EJS setup
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// Middleware
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride("_method"));
 
-// Home route
+// Home
 app.get("/", (req, res) => {
     res.send("Hi, I am a root");
 });
 
-// INDEX ROUTE
+// Index
 app.get("/listings", async (req, res) => {
     const allListings = await Listing.find({});
 
     res.render("listings/index", { allListings });
 });
 
-// NEW ROUTE
+// New
 app.get("/listings/new", (req, res) => {
     res.render("listings/new");
 });
 
-// CREATE ROUTE
+// Create
 app.post("/listings", async (req, res) => {
-    const listing = new Listing(req.body);
+    const listing = new Listing(req.body.listing);
 
     await listing.save();
 
@@ -55,12 +54,46 @@ app.post("/listings", async (req, res) => {
     res.redirect("/listings");
 });
 
-// Edit express
-app.get("/listings/:id/edit",(req,res)=>{
+// Edit
+app.get("/listings/:id/edit", async (req, res) => {
+    const { id } = req.params;
 
+    const listing = await Listing.findById(id);
+
+    if (!listing) {
+        return res.send("Listing not found");
+    }
+
+    res.render("listings/edit", { listing });
 });
 
-// SHOW ROUTE
+// Update
+app.put("/listings/:id", async (req, res) => {
+    const { id } = req.params;
+
+    await Listing.findByIdAndUpdate(
+        id,
+        { ...req.body.listing },
+        { runValidators: true }
+    );
+
+    console.log("Listing updated");
+
+    res.redirect("/listings");
+});
+
+// Delete
+app.delete("/listings/:id", async (req, res) => {
+    const { id } = req.params;
+
+    await Listing.findByIdAndDelete(id);
+
+    console.log("Listing deleted");
+
+    res.redirect("/listings");
+});
+
+// Show
 app.get("/listings/:id", async (req, res) => {
     const { id } = req.params;
 
@@ -73,7 +106,7 @@ app.get("/listings/:id", async (req, res) => {
     res.render("listings/show", { listing });
 });
 
-// TEST LISTING ROUTE
+// Test Listing
 app.get("/testListing", async (req, res) => {
     const sampleListing = new Listing({
         title: "My new villa",
@@ -90,7 +123,6 @@ app.get("/testListing", async (req, res) => {
     res.send("successful testing");
 });
 
-// Start server
 app.listen(8080, () => {
     console.log("server is listening to port 8080");
 });

@@ -1,31 +1,76 @@
 <% layout("layouts/boilerplate") %>
 
-
 <body>
 
-    <h3>Listing Details:</h3>
+    <div class="row mt-4">
 
-    <ul>
-        <li>Title: <%= listing.title %></li>
+        <div class="col-md-8 offset-md-2">
 
-        <li>Description: <%= listing.description %></li>
+            <h3 class="mb-4">Listing Details</h3>
 
-        <li>
-            Price: ₹<%= listing.price.toLocaleString("en-IN") %>
-        </li>
+            <div class="card show-card">
 
-        <li>Location: <%= listing.location %></li>
+                <img
+                    src="<%= listing.image.url %>"
+                    class="card-img-top show-img"
+                    alt="listing_image"
+                >
 
-        <li>Country: <%= listing.country %></li>
-    </ul>
-    <a href="/listings/<%= listing._id%>/edit">Edit this Listing</a>
-    <br><br>
-    <a href="/listings/<%= listing._id %>/edit">Edit this Listing</a>
+                <div class="card-body">
 
-<br><br>
+                    <h3 class="card-title">
+                        <%= listing.title %>
+                    </h3>
 
-<form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
-    <button type="submit">Delete this listing</button>
-</form>
+                    <p class="card-text">
+                        <%= listing.description %>
+                    </p>
+
+                    <p class="card-text">
+                        <b>Price:</b>
+                        ₹<%= listing.price != null ? listing.price.toLocaleString("en-IN") : "N/A" %>
+                    </p>
+
+                    <p class="card-text">
+                        <b>Location:</b>
+                        <%= listing.location %>
+                    </p>
+
+                    <p class="card-text">
+                        <b>Country:</b>
+                        <%= listing.country %>
+                    </p>
+
+                    <div class="mt-4">
+
+                        <a
+                            href="/listings/<%= listing._id %>/edit"
+                            class="btn btn-dark"
+                        >
+                            Edit Listing
+                        </a>
+
+                        <form
+                            method="POST"
+                            action="/listings/<%= listing._id %>?_method=DELETE"
+                            class="d-inline"
+                        >
+                            <button
+                                type="submit"
+                                class="btn btn-danger"
+                            >
+                                Delete Listing
+                            </button>
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </body>

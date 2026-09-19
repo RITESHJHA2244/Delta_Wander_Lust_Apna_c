@@ -25,8 +25,7 @@
                         <p class="card-text">
                             <b><%= listing.title %></b>
                             <br>
-                            ₹<%= listing.price.toLocaleString("en-IN") %>
-                        </p>
+                        ₹<%= listing.price != null ? listing.price.toLocaleString("en-IN") : "N/A" %>                        </p>
 
                     </div>
 

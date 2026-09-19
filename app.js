@@ -83,9 +83,8 @@ app.put("/listings/:id", async (req, res) => {
 
     console.log("Listing updated");
 
-    res.redirect("/listings");
+    res.redirect(`/listings/${id}`);
 });
-
 // Delete
 app.delete("/listings/:id", async (req, res) => {
     const { id } = req.params;
